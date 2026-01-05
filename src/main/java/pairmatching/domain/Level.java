@@ -13,5 +13,22 @@ public enum Level {
         this.name = name;
     }
 
-    // 추가 기능 구현
+    public static Level of(String name) {
+        if (name.equals("레벨1")) {
+            return Level.LEVEL1;
+        }
+        if (name.equals("레벨2")) {
+            return Level.LEVEL2;
+        }
+        if (name.equals("레벨3")) {
+            return Level.LEVEL3;
+        }
+        if (name.equals("레벨4")) {
+            return Level.LEVEL4;
+        }
+        if (name.equals("레벨5")) {
+            return Level.LEVEL5;
+        }
+        return null;
+    }
 }
