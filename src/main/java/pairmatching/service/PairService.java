@@ -2,9 +2,7 @@ package pairmatching.service;
 
 import camp.nextstep.edu.missionutils.Randoms;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import pairmatching.domain.Course;
 import pairmatching.domain.Crew;
 import pairmatching.domain.Level;
@@ -39,70 +37,78 @@ public class PairService {
             return new PairMatchResult(true, null);
         }
 
-        // 같은 레벨의 다른 미션에서 매칭된 적이 있는 경우 매칭 시켜선 안됨
-        // 과정, 레벨은 같고 미션은 다른 페어가 있는지 확인
-        List<Pair> alreadyPair = pairList.stream().filter(eachPair -> eachPair.isAlreadyMatchInSameLevel(pairInfo))
-                .toList();
+        List<Pair> history = getHistoryInSameLevel(pairInfo);
+        List<String> crewNames = getCrewNames(pairInfo);
+        Pair pair = attemptPairMatching(crewNames, history, pairInfo);
+        pairList.add(pair);
 
-        List<Crew> crews = findCrewByCourse(pairInfo);
-        List<String> crewNames = crews.stream().map(Crew::getName).toList();
+        return new PairMatchResult(false, pair.retrievePair());
+    }
 
-        Pair pair = new Pair(pairInfo);
-        List<String> shuffled = new ArrayList<>(Randoms.shuffle(crewNames));
-        int count = 1;
-        // 먼저 shuffled에서 앞에서 2명 꺼내오기
-        //TODO : 매칭할 경우의 수 없는 경우...?
+    private Pair attemptPairMatching(List<String> crewNames, List<Pair> history, PairInfo pairInfo) {
+        for (int i = 0; i < 3; i++) {
+            List<String> shuffled = new ArrayList<>(Randoms.shuffle(crewNames));
+            Pair pair = new Pair(pairInfo);
+
+            // 매칭에 성공하면 즉시 반환
+            if (matchCurrentCrew(pair, shuffled, history)) {
+                return pair;
+            }
+        }
+        throw new IllegalArgumentException(ErrorMessage.PAIR_MATCH_FAILED.getMessage());
+    }
+
+    // 한 번의 셔플된 목록으로 끝까지 매칭을 시도. 실패하면 false 반환.
+    private boolean matchCurrentCrew(Pair pair, List<String> shuffled, List<Pair> history) {
         while (!shuffled.isEmpty()) {
-
-            if (count == 4) {
-                throw new IllegalArgumentException(ErrorMessage.PAIR_MATCH_FAILED.getMessage());
-            }
-
             if (shuffled.size() == 1) {
-                // 여기 들어온 건 1명 남았다는 이야기
-                Set<String> lastGroup = pair.getLastGroup();
-                lastGroup = new LinkedHashSet<>(lastGroup);
-                lastGroup.add(shuffled.get(0));
-
-                boolean already = checkAlreadyPair(alreadyPair, List.copyOf(lastGroup));
-                if (already) {
-                    // 그전까지의 페어 초기화
-                    pair.clearPair();
-                    shuffled = new ArrayList<>(Randoms.shuffle(crewNames));
-                    count++;
-                    continue;
-                }
-
-                // 페어 맺은 적 없다면 정상적으로 페어 추가
-                pair.addLast(shuffled.get(0));
-                // 그후 페어 추가한 사람은 지워야함.
-                shuffled.remove(0);
-                continue;
+                return tryMatchLastOne(pair, shuffled, history);
             }
-
-            String first = shuffled.get(0);
-            String second = shuffled.get(1);
-
-            // 이미 페어 맺은 적 있는지 유무
-            // list에서 이미 매칭된 적 있는 조합으론 매칭되어선 안됨
-            boolean already = checkAlreadyPair(alreadyPair, List.of(first, second));
-            if (already) {
-                // 그전까지의 페어 초기화
-                pair.clearPair();
-                shuffled = new ArrayList<>(Randoms.shuffle(crewNames));
-                count++;
-                continue;
+            if (!tryMatchTwo(pair, shuffled, history)) {
+                return false;
             }
+        }
+        return true;
+    }
 
-            // 페어 맺은 적 없다면 정상적으로 페어 추가
-            pair.addPair(List.of(first, second));
-            // 그후 페어 추가한 사람은 지워야함.
-            shuffled.remove(0);
-            shuffled.remove(0);
+    // 마지막 1명 매칭 시도 (3명 페어로 해야되는경우)
+    private boolean tryMatchLastOne(Pair pair, List<String> shuffled, List<Pair> history) {
+        String lastCrew = shuffled.get(0);
+        List<String> lastGroup = new ArrayList<>(pair.getLastGroup());
+        lastGroup.add(lastCrew);
+
+        // 만약 이미 페어 맺은 적 있으면 false;
+        if (checkAlreadyPair(history, lastGroup)) {
+            return false;
         }
 
-        pairList.add(pair);
-        return new PairMatchResult(false, pair.retrievePair());
+        pair.addLast(lastCrew);
+        shuffled.clear();
+        return true;
+    }
+
+    // 2명 매칭 시도
+    private boolean tryMatchTwo(Pair pair, List<String> shuffled, List<Pair> history) {
+        String crew1 = shuffled.get(0);
+        String crew2 = shuffled.get(1);
+
+        if (checkAlreadyPair(history, List.of(crew1, crew2))) {
+            return false;
+        }
+
+        pair.addPair(List.of(crew1, crew2));
+        shuffled.subList(0, 2).clear(); // 앞에서 2명 제거
+        return true;
+    }
+
+    private List<String> getCrewNames(PairInfo pairInfo) {
+        List<Crew> crews = findCrewByCourse(pairInfo);
+        return crews.stream().map(Crew::getName).toList();
+    }
+
+    private List<Pair> getHistoryInSameLevel(PairInfo pairInfo) {
+        return pairList.stream().filter(eachPair -> eachPair.isAlreadyMatchInSameLevel(pairInfo))
+                .toList();
     }
 
     private void checkRematch(boolean rematch, PairInfo pairInfo) {
