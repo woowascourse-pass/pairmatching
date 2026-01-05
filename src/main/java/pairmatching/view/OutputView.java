@@ -10,4 +10,8 @@ public class OutputView {
             System.out.println(pair.format());
         }
     }
+
+    public void printInitialMessage() {
+        System.out.println("초기화 되었습니다.");
+    }
 }
