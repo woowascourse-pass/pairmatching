@@ -2,7 +2,7 @@ package pairmatching.service;
 
 import camp.nextstep.edu.missionutils.Randoms;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import pairmatching.domain.Course;
@@ -64,7 +64,7 @@ public class PairService {
             if (shuffled.size() == 1) {
                 // 여기 들어온 건 1명 남았다는 이야기
                 Set<String> lastGroup = pair.getLastGroup();
-                lastGroup = new HashSet<>(lastGroup);
+                lastGroup = new LinkedHashSet<>(lastGroup);
                 lastGroup.add(shuffled.get(0));
 
                 boolean already = checkAlreadyPair(alreadyPair, List.copyOf(lastGroup));
