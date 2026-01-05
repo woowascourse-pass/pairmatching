@@ -51,7 +51,7 @@ public class PairService {
         List<String> crewNames = crews.stream().map(Crew::getName).toList();
 
         Pair pair = new Pair(pairInfo);
-        List<String> shuffled = Randoms.shuffle(crewNames);
+        List<String> shuffled = new ArrayList<>(Randoms.shuffle(crewNames));
         int count = 1;
         // 먼저 shuffled에서 앞에서 2명 꺼내오기
         //TODO : 매칭할 경우의 수 없는 경우...?
@@ -71,7 +71,7 @@ public class PairService {
                 if (already) {
                     // 그전까지의 페어 초기화
                     pair.clearPair();
-                    shuffled = Randoms.shuffle(crewNames);
+                    shuffled = new ArrayList<>(Randoms.shuffle(crewNames));
                     count++;
                     continue;
                 }
@@ -92,7 +92,7 @@ public class PairService {
             if (already) {
                 // 그전까지의 페어 초기화
                 pair.clearPair();
-                shuffled = Randoms.shuffle(crewNames);
+                shuffled = new ArrayList<>(Randoms.shuffle(crewNames));
                 count++;
                 continue;
             }
