@@ -20,6 +20,8 @@ public class OutputView {
                     + "  - 레벨5: \n"
                     + "############################################\n";
 
+    private static final String CLEAR_PAIR = "초기화 되었습니다.";
+
     public void printPair(PairMatchResult result) {
 
         System.out.println();
@@ -42,6 +44,11 @@ public class OutputView {
 
     public void printError(String errorMessage) {
         System.out.println(errorMessage);
+        System.out.println();
+    }
+
+    public void clearPair() {
+        System.out.println(CLEAR_PAIR);
         System.out.println();
     }
 }

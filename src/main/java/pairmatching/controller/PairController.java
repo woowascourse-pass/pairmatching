@@ -23,7 +23,6 @@ public class PairController {
     }
 
     public void start() {
-
         String select;
         while (!((select = readFunction()).equals("Q"))) {
 
@@ -41,10 +40,9 @@ public class PairController {
 
             if (number == 3) {
                 pairService.initializePair();
+                outputView.clearPair();
             }
-
         }
-
     }
 
     private void retrievePair() {
