@@ -14,4 +14,16 @@ public class PairMatchingRequest {
         this.level = Level.of(level);
         this.mission = mission;
     }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public Level getLevel() {
+        return level;
+    }
+
+    public String getMission() {
+        return mission;
+    }
 }
