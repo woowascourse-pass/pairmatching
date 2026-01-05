@@ -32,10 +32,7 @@ public class PairService {
         PairInfo pairInfo = makePairInfo(rawPairInfo);
 
         // 재매치 요청 경우 기존 페어 삭제
-        if (rematch) {
-            Pair pair = pairList.stream().filter(eachPair -> eachPair.isExactlySame(pairInfo)).findFirst().get();
-            pairList.remove(pair);
-        }
+        checkRematch(rematch, pairInfo);
 
         // 이미 존재하는 경우
         if (isAlreadyExist(pairInfo) && !rematch) {
@@ -108,14 +105,20 @@ public class PairService {
         return new PairMatchResult(false, pair.retrievePair());
     }
 
+    private void checkRematch(boolean rematch, PairInfo pairInfo) {
+        if (rematch) {
+            Pair pair = pairList.stream().filter(eachPair -> eachPair.isExactlySame(pairInfo)).findFirst().get();
+            pairList.remove(pair);
+        }
+    }
+
     private PairInfo makePairInfo(List<String> pairInfo) {
         Course course = Course.findCourse(pairInfo.get(0));
         Level level = Level.findLevel(pairInfo.get(1));
         Mission mission = Mission.findMission(pairInfo.get(2), level);
 
-        return new PairInfo(course, level, mission);
+        return new PairInfo(course, level, mission);                               
     }
-
 
     private boolean checkAlreadyPair(List<Pair> checkedPair, List<String> crews) {
         return checkedPair.stream().anyMatch(eachPair -> eachPair.checkCrew(crews));
