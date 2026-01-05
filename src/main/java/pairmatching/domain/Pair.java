@@ -1,7 +1,7 @@
 package pairmatching.domain;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -29,7 +29,7 @@ public class Pair {
     }
 
     public void addPair(List<String> crews) {
-        pairList.add(new HashSet<>(crews));
+        pairList.add(new LinkedHashSet<>(crews));
     }
 
     public void clearPair() {
@@ -44,7 +44,7 @@ public class Pair {
     public void addLast(String last) {
         Set<String> lastGroup = pairList.get(pairList.size() - 1);
         pairList.remove(lastGroup);
-        lastGroup = new HashSet<>(lastGroup);
+        lastGroup = new LinkedHashSet<>(lastGroup);
         lastGroup.add(last);
         pairList.add(lastGroup);
     }
