@@ -32,21 +32,13 @@ public class Pair {
         pairList.add(new LinkedHashSet<>(crews));
     }
 
-    public void clearPair() {
-        pairList.clear();
-    }
-
     public Set<String> getLastGroup() {
         return pairList.get(pairList.size() - 1);
     }
 
     // 1명 남았을 경우
     public void addLast(String last) {
-        Set<String> lastGroup = pairList.get(pairList.size() - 1);
-        pairList.remove(lastGroup);
-        lastGroup = new LinkedHashSet<>(lastGroup);
-        lastGroup.add(last);
-        pairList.add(lastGroup);
+        pairList.get(pairList.size() - 1).add(last);
     }
 
     public List<Set<String>> retrievePair() {
