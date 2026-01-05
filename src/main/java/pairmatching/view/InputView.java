@@ -18,6 +18,8 @@ public class InputView {
             + "############################################\n"
             + "과정, 레벨, 미션을 선택하세요.\n"
             + "ex) 백엔드, 레벨1, 자동차경주";
+    public final static String INPUT_PAIR_REMATCHING_MESSAGE = "매칭 정보가 있습니다. 다시 매칭하시겠습니까?\n"
+        + "네 | 아니오";
 
     public String inputFunction() {
         System.out.println(INPUT_FUNCTION_MESSAGE);
@@ -26,6 +28,11 @@ public class InputView {
 
     public String inputPairMatching() {
         System.out.println(INPUT_PAIR_MATCHING_MESSAGE);
+        return Parser.removeAllSpaces(Console.readLine());
+    }
+
+    public String inputPairRematching() {
+        System.out.println(INPUT_PAIR_REMATCHING_MESSAGE);
         return Parser.removeAllSpaces(Console.readLine());
     }
 }
