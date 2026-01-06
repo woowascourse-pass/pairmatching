@@ -4,7 +4,6 @@ import java.util.List;
 import pairmatching.dto.PairMatchResult;
 import pairmatching.message.ErrorMessage;
 import pairmatching.service.PairService;
-import pairmatching.util.InputFileReader;
 import pairmatching.util.Parser;
 import pairmatching.validator.InputValidator;
 import pairmatching.view.InputView;
@@ -16,7 +15,7 @@ public class PairController {
     private final OutputView outputView;
     private final PairService pairService;
 
-    public PairController(InputView inputView, OutputView outputView, PairService pairService, InputFileReader inputFileReader) {
+    public PairController(InputView inputView, OutputView outputView, PairService pairService) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.pairService = pairService;

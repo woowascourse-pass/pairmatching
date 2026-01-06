@@ -8,7 +8,7 @@ import pairmatching.view.OutputView;
 
 public class AppConfig {
     public PairController pairController() {
-        return new PairController(inputView(), outputView(), pairService(), inputFileReader());
+        return new PairController(inputView(), outputView(), pairService());
     }
 
     public PairService pairService() {

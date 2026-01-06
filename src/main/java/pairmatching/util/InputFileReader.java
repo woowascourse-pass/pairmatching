@@ -1,51 +1,32 @@
 package pairmatching.util;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
-import pairmatching.domain.Course;
-import pairmatching.domain.Crew;
+import java.util.function.Function;
 
 public class InputFileReader {
 
-    public List<Crew> readFront() {
-        try {
-            // 파일 입력스트림 생성
-            FileReader fileReader = new FileReader("src/main/resources/frontend-crew.md");
-            // 입력 버퍼 생성
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
+    public <T> List<T> readLines(String fileName, Function<String, T> mapper) {
+        try (InputStream inputStream = getClass().getClassLoader()
+                .getResourceAsStream(fileName)) {
 
-            List<Crew> frontCrews = new ArrayList<>();
-            String name;
-            while((name = bufferedReader.readLine()) != null) {
-                frontCrews.add(new Crew(Course.FRONTEND, name));
-            }
-            return frontCrews;
+            validateInputStream(inputStream, fileName);
+
+            return new BufferedReader(new InputStreamReader(inputStream))
+                    .lines()
+                    .map(mapper)
+                    .toList();
         } catch (IOException e) {
-            System.out.println("잘못된 입력입니다.");
+            throw new RuntimeException("파일 읽기 중 오류가 발생했습니다.", e);
         }
-        return List.of();
     }
 
-    public List<Crew> readBack() {
-        try {
-            // 파일 입력스트림 생성
-            FileReader fileReader = new FileReader("src/main/resources/backend-crew.md");
-            // 입력 버퍼 생성
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            List<Crew> backCrews = new ArrayList<>();
-            String name;
-            while((name = bufferedReader.readLine()) != null) {
-                backCrews.add(new Crew(Course.BACKEND, name));
-            }
-
-            return backCrews;
-        } catch (IOException e) {
-            System.out.println("잘못된 입력입니다.");
+    private void validateInputStream(InputStream inputStream, String fileName) {
+        if (inputStream == null) {
+            throw new IllegalArgumentException("파일을 찾을 수 없습니다: " + fileName);
         }
-        return List.of();
     }
 }

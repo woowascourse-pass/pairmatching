@@ -20,8 +20,8 @@ public class PairService {
     private final List<Pair> pairList = new ArrayList<>();
 
     public PairService(InputFileReader inputFileReader) {
-        front = inputFileReader.readFront();
-        back = inputFileReader.readBack();
+        front = inputFileReader.readLines("frontend-crew.md", name -> new Crew(Course.FRONTEND, name));
+        back = inputFileReader.readLines("backend-crew.md", name -> new Crew(Course.BACKEND, name));
     }
 
     // false - 이미 존재하거나, 페어 매칭 실패 시 false;
