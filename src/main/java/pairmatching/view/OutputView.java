@@ -6,6 +6,7 @@ import pairmatching.model.CrewMember;
 import java.util.List;
 
 public class OutputView {
+    public static String ERROR_PREFIX = "[ERROR] ";
 
     public void printInfo() {
         System.out.println();
@@ -46,6 +47,7 @@ public class OutputView {
 
             if (i == crewMembers.size() - 3) {
                 sb.append(" : ").append(crewMembers.get(i + 2).getName());
+                i++;
             }
 
             System.out.println(sb);
@@ -53,7 +55,7 @@ public class OutputView {
     }
 
     public void printError(String message) {
-        System.out.println(message);
+        System.out.println(ERROR_PREFIX + message);
     }
 
     public void printClear() {
