@@ -15,7 +15,7 @@ public enum Mission {
     Improvement(Level.LEVEL4, "성능개선"),
     Distribution(Level.LEVEL4, "배포"),
 
-    None(null, "없음");
+    None(Level.None, "없음");
 
     private final Level level;
     private final String name;
