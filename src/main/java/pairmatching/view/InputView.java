@@ -1,6 +1,10 @@
 package pairmatching.view;
 
 import camp.nextstep.edu.missionutils.Console;
+import pairmatching.model.Course;
+import pairmatching.model.Info;
+import pairmatching.model.Level;
+import pairmatching.model.Mission;
 import pairmatching.util.Parser;
 
 import java.util.List;
@@ -21,7 +25,7 @@ public class InputView {
         return command;
     }
 
-    public String readInfo() {
+    public Info readInfo() {
         System.out.println("과정, 레벨, 미션을 선택하세요.");
         System.out.println("ex) 백엔드, 레벨1, 자동차경주");
 
@@ -29,7 +33,12 @@ public class InputView {
         List<String> tokens = Parser.parseByDelimiter(raw);
         validateInfo(tokens);
 
-        return raw;
+        Course course = Course.from(tokens.get(0));
+        Level level = Level.from(tokens.get(1));
+        String missionName = tokens.get(2);
+        Mission mission = Mission.find(level, missionName);
+
+        return new Info(course, mission);
     }
 
     public String readWhether() {
