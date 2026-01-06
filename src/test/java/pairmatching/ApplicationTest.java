@@ -25,6 +25,17 @@ class ApplicationTest extends NsTest {
     }
 
     @Test
+    void 홀수_인원_페어_매칭() {
+        assertShuffleTest(
+                () -> {
+                    run("1", "백엔드, 레벨1, 자동차경주", "Q");
+                    assertThat(output()).contains("태웅2 : 백호", "치수 : 태섭 : 포비");
+                },
+                Arrays.asList("태웅2", "백호", "치수", "태섭", "포비")
+        );
+    }
+
+    @Test
     void 없는_미션에_대한_예외_처리() {
         assertSimpleTest(
             () -> {
