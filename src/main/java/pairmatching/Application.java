@@ -8,8 +8,8 @@ import pairmatching.view.InputView;
 import pairmatching.view.OutputView;
 
 public class Application {
-    private static final String BACKEND_CREW_FILE_PATH = "holiday.md";
-    private static final String FRONTEND_CREW_FILE_PATH = "holiday.md";
+    private static final String BACKEND_CREW_FILE_PATH = "backend-crew.md";
+    private static final String FRONTEND_CREW_FILE_PATH = "frontend-crew.md";
 
     public static void main(String[] args) {
         InputView inputView = new InputView();
